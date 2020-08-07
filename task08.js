@@ -2,23 +2,24 @@ import images from "./galary.js";
 const refs = {
   galaryList: document.querySelector(".gallery"),
   lightbox: document.querySelector(".js-lightbox"),
-  btn: document.querySelector('[data-action="close - lightbox"]'),
+  btn: document.querySelector('[data-action="close-lightbox"]'),
 };
 
 const createImage = (item, parent) => {
   const { preview, original, description } = item;
   const img = document.createElement("img");
 
-  img.classList.add(".gallery__image");
+  img.classList.add("gallery__image");
   img.src = preview;
-  img.dataset.source = original;
+  img.source = original;
   img.alt = description;
+  img.setAttribute("data-original", original);
   parent.appendChild(img);
 };
 const createLink = (item, parent) => {
   const { original } = item;
   const a = document.createElement("a");
-  a.classList.add(".gallery__link");
+  a.classList.add("gallery__link");
   a.href = original;
 
   createImage(item, a);
@@ -26,7 +27,7 @@ const createLink = (item, parent) => {
 };
 const createItem = (item) => {
   const liRef = document.createElement("li");
-  liRef.classList.add(".gallery__item");
+  liRef.classList.add("gallery__item");
   createLink(item, liRef);
   return liRef;
 };
@@ -40,9 +41,11 @@ function onClickHandler(event) {
   event.preventDefault();
   if (event.target.nodeName === "IMG") {
     refs.lightbox.classList.add("is-open");
-    refs.lightbox.querySelector(".lightbox__image").src = event.target.src;
+    refs.lightbox.querySelector("lightbox__image").src =
+      event.target.dataset.original;
     refs.lightbox.querySelector(".lightbox__image").alt = event.target.alt;
   }
+  console.log(event.target.dataset.original);
 }
 function onCloseHandler(event) {
   if (event.target.nodeName === "I" || event.target.nodeName === "BUTTON") {
